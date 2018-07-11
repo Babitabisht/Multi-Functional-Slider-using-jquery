@@ -1,0 +1,1 @@
+Image Slider having  various effects other than just sliding, using jquery .

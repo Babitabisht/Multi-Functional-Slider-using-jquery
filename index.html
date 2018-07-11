@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    
+    <style>
+    .imgStyle{
+height: 100px;
+width: 100px;
+border: 4px solid greenyellow;
+    }
+ 
+    
+    </style>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+   </head>
+<body style="background-color:darkorchid">
+
+
+<div class="row">
+
+<div class="col-md-3">
+       <span class="text-light">Image Effect :</span> <select name="" id="imageEffect" class="form-control">
+                <option value="slide">slide</option>
+                <option value="fade">fade</option>
+            </select><br><br>
+           <span class="text-light"> Time in duration :</span> <select name="" id="imgDuration" class="form-control">
+            
+            <option value="0.5">0.5</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            
+            
+            </select>
+            
+
+</div>
+
+<div class="col-md-6">
+        <div class="text-center">
+                <input type="button" value="Enlarge" id="Enlarge" class="btn btn-outline-light">
+                <input type="button" value="Shrink" id="shrink" class="btn btn-outline-light">
+            </div>
+<div class="text-center">
+                <img src="images/book (1).jpg" alt="" id="mainImage" style="height: 500px;width:540px;border:5px solid royalblue"  class="img-fluid">
+                
+                <div id="divContainer">
+                
+                <img src="images/book (1).jpg" alt="" class ="imgStyle" class="img-fluid">
+                <img src="images/book (2).jpg" alt="" class="imgStyle" class="img-fluid">
+                <img src="images/book (3).jpg" alt="" class="imgStyle" class="img-fluid">
+                <img src="images/book (4).jpg" alt="" class="imgStyle" class="img-fluid">
+                <img src="images/tech.jpeg" alt="" class="imgStyle" class="img-fluid">
+                
+                
+                
+                </div>
+            </div>
+                
+    
+    </div>
+
+
+    <div class="col-md-3">
+
+           
+                    <input type="button" value="startSlideshow" id="startSlide"  class="btn btn-outline-light">
+                    <input type="button" value="stopSlideshow" id="stopSlide" class="btn btn-outline-light">
+                    
+        </div>
+
+
+</div>
+
+
+
+
+
+
+
+  
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> 
+<script>
+
+$(document).ready(function(){
+
+
+$('#divContainer').on({
+mouseover :function(){
+
+    $(this).css({
+        'cursor' :'pointer',
+        'border-color' : 'red'
+    }
+    );
+},
+mouseout:function(){
+$(this).css({
+    'cursor' : 'default' ,
+    'border-color' :'greenyellow'
+
+});
+    
+} ,
+
+click : function(){
+var imageUrl = $(this).attr('src');
+var effect=$('#imageEffect').val();
+var duration=parseInt($('#imgDuration').val() * 1000);
+//alert(duration);
+var image=$('#mainImage');
+if(effect=='fade'){
+
+image.fadeOut(duration,function(){
+
+$(this).attr('src',imageUrl);
+
+}).fadeIn(duration);
+    
+}else{
+image.slideUp(duration,function(){
+
+$(this).attr('src',imageUrl);
+
+}).slideDown(duration);
+    
+}
+
+}
+
+
+},'img');
+
+
+var img=$('#mainImage');
+var h=parseInt(img.css('height'));
+//alert(h)
+
+var w=parseInt(img.css('width'));
+
+$('#Enlarge').click(function(){
+h+=100;
+w+=100;
+img.animate({
+'height':h,
+'width' :w
+});
+});
+
+$('#shrink').click(function(){
+h-=100;
+w-=100;
+img.animate({
+'height':h,
+'width' :w
+});
+
+});
+
+var start =$('#startSlide');
+var stop =$('#stopSlide');
+var imageURL =new Array();
+var intervalId;
+
+
+$('#divContainer img').each(function(){
+ var i=$(this).attr('src');
+imageURL.push(i);
+
+//alert(imageURL.length)
+
+});
+//alert(imageURL.length)
+
+function setImage (){
+    var m=$('#mainImage');
+   var cUrl=m.attr('src');
+   var cIndex=$.inArray(cUrl,imageURL);
+   if(cIndex==imageURL.length-1){
+       cIndex=-1;
+   }
+   m.attr('src',imageURL[cIndex+1]);
+}
+
+start.click(function(){
+intervalId=setInterval(setImage,1000);
+$(this).attr('disabled','disabled');
+stop.removeAttr('disabled');
+});
+
+stop.click(function(){
+clearInterval(intervalId);
+$(this).attr('disabled','disabled');
+start.removeAttr('disabled');
+
+
+}).attr('disabled','disabled');
+
+});
+
+</script>
+    
+    
+
+</body>
+</html>
